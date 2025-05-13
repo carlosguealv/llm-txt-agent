@@ -124,11 +124,11 @@ const findDocFileAndAnswer = async (library: string, question: string) => {
   const fileTypes = ['llms-full.txt', 'llms.txt', 'openapi.yaml'];
 
   for (const ftype of fileTypes) {
-    const searchUrl = `https://www.google.com/search?q=filetype:txt ${library}+${ftype}`;
+    const searchUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(library)}+${encodeURIComponent(ftype)}`;
     const response = await fetch(searchUrl);
     const html = await response.text();
 
-    const urlRegex = new RegExp(`https?:\\/\\/[\\w\\-.]+\\.[\\w\\-.]+\\S*(${ftype})`, 'gi');
+    const urlRegex = new RegExp(`[\\w\\-.]+\\.[\\w\\-.]+\\S*\\/${ftype}`, 'gi');
     const matches = html.match(urlRegex);
     const uniqueMatches = matches ? Array.from(new Set(matches)) : [];
 
