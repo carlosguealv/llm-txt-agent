@@ -137,12 +137,9 @@ const findDocFileAndAnswer = async (library: string, question: string) => {
       const url = uniqueMatches[0];
       let answer = null;
       try {
-        const docResponse = await fetch(url);
+        const docResponse = await fetch(`https://${url}`);
         const docText = await docResponse.text();
-        const lowerQ = question.toLowerCase();
-        const lines = docText.split('\n');
-        const foundLine = lines.find(line => line.toLowerCase().includes(lowerQ));
-        answer = foundLine || 'No direct answer found in the documentation file.';
+        answer = docText || 'No direct answer found in the documentation file.';
       } catch (e) {
         answer = 'Could not fetch or process the documentation file.';
       }
