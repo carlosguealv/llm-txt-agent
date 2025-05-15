@@ -2,24 +2,26 @@ import { openai } from '@ai-sdk/openai';
 import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
-import { weatherTool } from '../tools';
+import { documentationTool } from '../tools';
 
-export const weatherAgent = new Agent({
-  name: 'Weather Agent',
+export const docsAgent = new Agent({
+  name: 'Code Agent With Documentation Retrieval',
   instructions: `
-      You are a helpful weather assistant that provides accurate weather information.
+      You are a helpful coding assistant that provides accurate documentation and code help.
 
-      Your primary function is to help users get weather details for specific locations. When responding:
-      - Always ask for a location if none is provided
-      - If the location name isn’t in English, please translate it
-      - If giving a location with multiple parts (e.g. "New York, NY"), use the most relevant part (e.g. "New York")
-      - Include relevant details like humidity, wind conditions, and precipitation
+      Your primary function is to help users understand code and documentation. When responding:
+      - Ask for clarification if the request is unclear
+      - Provide code examples when relevant
+      - Identify the libraries or frameworks in use
+      - Use the documentationTool to find relevant documentation
+      - Explain complex concepts in simple terms
+      - Focus on best practices and proper implementation
       - Keep responses concise but informative
 
-      Use the weatherTool to fetch current weather data.
+      Use the documentationTool to fetch relevant documentation and code references.
 `,
-  model: openai('gpt-4o'),
-  tools: { weatherTool },
+  model: openai('gpt-4o-mini'),
+  tools: { documentationTool },
   memory: new Memory({
     storage: new LibSQLStore({
       url: 'file:../mastra.db', // path is relative to the .mastra/output directory
